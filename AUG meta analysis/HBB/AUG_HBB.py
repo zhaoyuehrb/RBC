@@ -151,7 +151,8 @@ refseqDirectory = rootdirectory+barcode+'_seed29_refseq/'
 
 
 
-chrList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', 'X', 'Y']
+#chrList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', 'X', 'Y']
+chrList = ['11']
 chrList = map(lambda i: 'chr'+i, chrList)   ## no chrM !! 
 
 chromToGenes = {}
@@ -201,7 +202,7 @@ got = 0
 ## initialize codonToReads dict
 baseToReads = {}
 codonToReads = {}
-for i in xrange(-102, 303, 1):
+for i in xrange(-300, 1500, 1):
     baseToReads[i] = 0
     codon = i/3
     codonToReads[codon] = 0
