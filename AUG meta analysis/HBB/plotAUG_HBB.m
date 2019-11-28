@@ -29,9 +29,9 @@ for i = [1:18,25:30]
     end
     basefile = readtable(['start NT result/',AUGbase{baseIdx}]);
     codonfile = readtable(['start NT result/',AUGcodon{baseIdx}]);
-    figure;hold on;grid on;
+    h=figure;hold on;grid on;
     plot(basefile.Var1,basefile.Var2);
-    xlim([-100,500])
+    xlim([-60,60])
     dat = basefile{1:end-1,:};
     offset = dat(1,1);
     % conditions
@@ -43,29 +43,15 @@ for i = [1:18,25:30]
     ylabel('Read density (RPM)');
     xlabel('Distance from first start codon (nt)');
     title(['AUG base plot ',setLabel],'Interpreter','none')
-    saveas(gcf,['base plot/AUGbase_',setLabel,'.png']);
-        
     
-    figure;hold on;grid on;
-    plot(codonfile.Var1,codonfile.Var2);
-    
-    dat = codonfile{1:end-1,:};
-    offset = dat(1,1);
-    [pks,locs] = findpeaks(dat(:,2),...
-        'MinPeakDistance',2,'MinPeakHeight',0.4);
-    
-    text(locs+offset+.6,pks+.05,num2str(locs+offset))
-    plot(locs+offset,pks,'o','MarkerSize',12)
-    
-    
-    ylabel('Read density (RPM)');
-    xlabel('Distance from first start codon (3nt)');
-    title(['AUG codon plot ',setLabel],'Interpreter','none')
-    
-    saveas(gcf,['codon plot/AUGcodon_',setLabel,'.png']);
-    
-    
-    
+    ymax = h.CurrentAxes.YLim;
+    text(0,ymax(2)-20,'ORF1 start','Color','Red')
+    line([0,0],[0,ymax(2)],'LineStyle',':','Color','Red')
+    text(-46,ymax(2)-20,'ORF2','Color','Blue')
+    line([-46,-46],[0,ymax(2)],'LineStyle',':','Color','Blue')
+    %text(-60,-15,'-46')
+    set(gca, 'XTick', sort([-46, get(gca, 'XTick')]));
+    saveas(gcf,['zoomIn/AUGbase_',setLabel,'.png']);
     
     close all
     
