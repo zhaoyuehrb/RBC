@@ -90,7 +90,7 @@ L24_2_S15 <- filter_sig_res(dds,c("combined","L242","S152"))
 ### RNA
 res_1_against_0_RNA <- filter_sig_res(dds,c("combined","RNA1","RNA0"))
 res_2_against_0_RNA <- filter_sig_res(dds,c("combined","RNA2","RNA0"))
-
+res_2_against_1_RNA <- filter_sig_res(dds,c("combined","RNA2","RNA1"))
 
 
 ### RPF
@@ -111,6 +111,7 @@ res_2_TE <- filter_sig_res(dds,c("combined","RPF2","RNA2"))
 
 write.csv(res_1_against_0_RNA,"csv_raw/RNA_T1_against_T0.csv")
 write.csv(res_2_against_0_RNA,"csv_raw/RNA_T2_against_T0.csv")
+write.csv(res_2_against_1_RNA,"csv_raw/RNA_T2_against_T1.csv")
 write.csv(res_0_L24,"csv_raw/ER_L24_t0.csv")
 write.csv(res_1_L24,"csv_raw/ER_L24_t1.csv")
 write.csv(res_2_L24,"csv_raw/ER_L24_t2.csv")
