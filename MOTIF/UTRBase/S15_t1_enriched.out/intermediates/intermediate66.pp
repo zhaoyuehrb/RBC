@@ -1,0 +1,18 @@
+#PP 2.0
+
+HMGA1              UCGCGCAUCCC
+CREBZF             CCGUGAGGCCC
+SNAP47             GGGCGUCACCC
+CDK2AP1            CCCCGGGGCGC
+RNF44              CCGCGAGCCCC
+BBC3               CCGCCCGCCCC
+PIM1               CCACGAGCCGC
+
+#END
+
+#SECTION BASEPAIRS
+
+#BPCUT 0.001
+
+
+#END

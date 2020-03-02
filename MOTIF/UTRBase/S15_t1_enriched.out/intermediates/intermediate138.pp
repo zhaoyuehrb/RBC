@@ -1,0 +1,16 @@
+#PP 2.0
+
+MAFG               CGCCUGCCUUCCU
+PPP1R18            GCCCC-----UCU
+CSTB               CGCCAGAUUCCCU
+PTMA               CGCCAGAGUCCCU
+
+#END
+
+#SECTION BASEPAIRS
+
+#BPCUT 0.001
+
+1 6 0.002631
+
+#END
