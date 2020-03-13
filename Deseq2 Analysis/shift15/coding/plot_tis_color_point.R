@@ -48,7 +48,7 @@ plot_volcano <- function(res_tableDE, type, day,list_of_genes,label,folder_label
     geom_hline(yintercept = -log10(0.05), linetype = 'dashed', color = 'brown', size = 0.7) +
     
     #points
-    geom_point(aes(colour = effs),alpha = 0.5, size = 1.2) +
+    geom_point(aes(colour = eff),alpha = 0.5, size = 1.2) +
     scale_color_viridis(begin = 0, end = 1, direction = -1, option = 'B', name = 'TIS Efficiency') +
     
     scale_fill_viridis(begin = 0, end = 1, direction = -1, option = 'B', name = 'Efficiency') + 
