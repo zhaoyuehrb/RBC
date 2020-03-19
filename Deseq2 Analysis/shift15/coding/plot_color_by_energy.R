@@ -1,0 +1,121 @@
+###Volcano Plot
+library(ggplot2)
+library(ggrepel)
+library(org.Hs.eg.db)
+library(AnnotationDbi)
+library(viridis)
+
+
+acc2eff = read.csv('../../../MOTIF/rnafold/utr_and_orf_minE_unnorm.csv')
+rownames(acc2eff) <- acc2eff[,1]
+acc2eff[,1]<-NULL
+
+effs <- c()
+i<-1
+for( acc in rownames(res_0_L24) ) {
+  effs[[i]] <- acc2eff[acc,]
+  i=i+1
+}
+
+
+
+
+
+
+
+plot_volcano <- function(res_tableDE, type, day,list_of_genes,label,folder_label,xlims,ylims){
+  
+  label <- 'utr_100orf_minE_unnorm'
+  res_tableDE$eff <- effs
+  res_tableDE <- res_tableDE[order(res_tableDE$eff, decreasing = TRUE),]
+  res_tableDE <- data.frame(res_tableDE)
+  
+  threshold_DE <- res_tableDE$padj < 0.05
+  
+  res_tableDE$threshold <- threshold_DE
+  
+  res_tableDE$genelabels <- ""
+  
+  
+  ggplot(res_tableDE,aes(x = log2FoldChange, y = -log10(padj))) +
+    
+    ylim(ylims[[1]],ylims[[2]]) +
+    xlim(xlims[[1]], xlims[[2]]) +
+    
+    #threshold lines
+    geom_vline(xintercept = -1, linetype = 'dashed', color = 'brown',size = 0.7) +
+    geom_vline(xintercept = 1, linetype = 'dashed', color = 'brown', size = 0.7) +
+    geom_hline(yintercept = -log10(0.05), linetype = 'dashed', color = 'brown', size = 0.7) +
+    
+    #points
+    geom_point(aes(colour = eff),alpha = 0.5, size = 1.2) +
+    scale_color_viridis(begin = 0, end = 1, direction = -1, option = 'B', name = 'TIS Efficiency') +
+    
+    scale_fill_viridis(begin = 0, end = 1, direction = -1, option = 'B', name = 'Efficiency') + 
+    
+    #guides(fill = guide_colourbar(barwidth = 0.5, barheight = 10)) +
+    #scale_fill_manual(name = '',
+    #                  values = c(label='blue'))+
+    
+    #guides(fill = F,title='Efficiency',title.position='right') +
+    
+    theme_bw() + 
+    
+    ggtitle(paste(type,sep = '')) +
+    xlab(bquote(~log[2]~ "FC")) +
+    ylab(bquote(~-log[10]~italic(p-adj)))+
+    
+    theme(legend.position = c(0.9,0.5),
+          #legend.position = 'none',
+          #legend.title = element_blank(),
+          legend.background = element_rect(color = 'black',size = 0.5,linetype= 'solid'),
+          legend.text = element_text(size = 12),
+          plot.title = element_text(size = rel(1.5),hjust = 0.5),
+          axis.title = element_text(size = rel(1.25)),
+          axis.text.y = element_text(size = 12),
+          axis.text.x = element_text(size=14))
+  
+  save_dir <- paste('plots/',label,'/',sep = '')
+  
+  
+  #save_dir <- '/Users/Yue/Documents/HGLab/deseq_yue/Proper Version/volc_doublecheck/'
+  #filepath <- paste(save_dir,folder_label,'/',type,toString(day),'.png',sep = '')
+  filepath <- paste(save_dir,'/',type,'.png',sep = '')
+  ggsave(filepath,width = 9, height = 7)
+  
+}
+
+
+plot_volcano(res_0_L24,'ER L24 T0',1,c(),'','',xlims=c(-5,5), ylims=c(0,10))
+
+#plot_volcano(res_0_L24,'L24_0_label',1,c(subset(res_0_L24,log2FoldChange>1)),'','',xlims=c(-5,5), ylims=c(0,10))
+
+plot_volcano(res_1_L24,'ER L24 T1',1,c(),'','',xlims=c(-5,5), ylims=c(0,10))
+plot_volcano(res_2_L24,'ER L24 T2',1,c(),'','',xlims=c(-5,5), ylims=c(0,10))
+
+plot_volcano(res_0_S15,'ER S15 T0',1,c(),'','',xlims=c(-5,5), ylims=c(0,26))
+plot_volcano(res_1_S15,'ER S15 T1',1,c(),'','',xlims=c(-5,5), ylims=c(0,40))
+plot_volcano(res_2_S15,'ER S15 T2',1,c(),'','',xlims=c(-5,5), ylims=c(0,20))
+
+plot_volcano(res_0_S24,'ER S24 T0',1,c(),'','',xlims=c(-5,5), ylims=c(0,10))
+plot_volcano(res_1_S24,'ER S24 T1',1,c(),'','',xlims=c(-5,5), ylims=c(0,10))
+plot_volcano(res_2_S24,'ER S24 T2',1,c(),'','',xlims=c(-5,5), ylims=c(0,10))
+
+
+plot_volcano(L24_0_S15,'L24 against S15 T0',1,c(),'','',xlims=c(-5,5),ylims=c(0,35))
+plot_volcano(L24_1_S15,'L24 against S15 T1',1,c(),'','',xlims=c(-5,5),ylims=c(0,35))
+plot_volcano(L24_2_S15,'L24 against S15 T2',1,c(),'','',xlims=c(-5,5),ylims=c(0,35))
+
+
+plot_volcano(res_1_against_0_RNA,'RNA T1 against T0',1,c(),'','',xlims=c(-6,6), ylims=c(0,120))
+plot_volcano(res_2_against_0_RNA,'RNA T2 against T0',1,c(),'','',xlims=c(-11,11), ylims=c(0,350))
+
+
+plot_volcano(res_1_against_0_RPF,'RPF T1 against T0',1,c(),'','',xlims=c(-7,7), ylims=c(0,150))
+plot_volcano(res_2_against_0_RPF,'RPF T2 against T0',1,c(),'','',xlims=c(-11,11), ylims=c(0,300))
+
+
+plot_volcano(res_1_te_0,'TE T1 against T0',1,c(),'','',xlims=c(-5,5), ylims=c(0,12))
+plot_volcano(res_2_te_0,'TE T2 against T0',1,c(),'','',xlims=c(-5,5), ylims=c(0,15))
+plot_volcano(res_2_te_1,'TE T2 against T1',1,c(),'','',xlims=c(-5,5), ylims=c(0,15))
+
