@@ -1,65 +1,58 @@
 library(DiffLogo)
 library(seqLogo)
 library(MotifDb)
-## import motifs
-hitIndeces = grep ('CTCF', values (MotifDb)$geneSymbol, ignore.case=TRUE)
-list = as.list(MotifDb[hitIndeces])
-sequenceCounts = as.numeric(values (MotifDb)$sequenceCount[hitIndeces])
-names(sequenceCounts) = names(list)
-pwm1 = reverseComplement(list$"Hsapiens-JASPAR_CORE-CTCF-MA0139.1"[, 2:18]) ## > pwm2 = list$"Hsapiens-jolma2013-CTCF"
-n1 = sequenceCounts["Hsapiens-JASPAR_CORE-CTCF-MA0139.1"]
-n2 = sequenceCounts["Hsapiens-jolma2013-CTCF"]
-## DiffLogo can also handle motifs of different length
-pwm_long = reverseComplement(list$"Hsapiens-JASPAR_CORE-CTCF-MA0139.1") ## reverse > pwm_short = list$"Hsapiens-jolma2013-CTCF"
-pwm2 = list$"Hsapiens-jolma2013-CTCF"
 
-## import five DNA motifs from matrix
-motif_folder = "extdata/pwm"
-motif_names_dna = c("H1-hESC", "MCF7", "HeLa-S3", "HepG2", "HUVEC")
-motifs_dna = list()
-for (name in motif_names_dna) {
-fileName = paste(motif_folder,"/",name,".pwm",sep="")
-file = system.file(fileName, package = "DiffLogo")
-motifs_dna[[name]] = getPwmFromPwmFile(file)
-}
-sampleSizes_dna = c("H1-hESC"=100, "MCF7"=100, "HeLa-S3"=100, "HepG2"=100, "HUVEC"=100)
-## import three DNA motifs from table
-motif_folder = "extdata/alignments"
-motif_names_dna2 = c("Mad", "Max", "Myc")
-motifs_dna2 = list()
-for (name in motif_names_dna2) {
+dir <- 'deseq_wo_replace/pwms/'
 
-fileName = paste(motif_folder,"/",name,".txt",sep="")
-file = system.file(fileName, package = "DiffLogo")
-motifs_dna2[[name]] = getPwmFromAlignmentFile(file)
-}
-> ## import three ASN motifs from fasta files
-motif_folder = "extdata/alignments"
-motif_names_asn = c("orderByRPF/seqs/RPF0_top.seq")
-motifs_asn = list()
-for (name in motif_names_asn) {
- fileName = paste(name,".fa",sep="")
- file = system.file(fileName, package = "DiffLogo")
- motifs_asn[[name]] = getPwmFromFastaFile(file, FULL_ALPHABET)
+batches <- clist <- c("ER_L24_t1", "ER_S15_t0","ER_S15_t1","ER_S15_t2")
+
+for (batch in batches) {
+  dir.create(file.path(getwd(),'difflogo/',batch), showWarnings = FALSE)
+  
+  
+  
+  pwm_en = read.csv(paste(dir,batch,'/',batch,'_enriched.csv',sep=''),row.names=1)
+  pwm_de = read.csv(paste(dir,batch,'/',batch,'_depleted.csv',sep=''),row.names=1)
+  pwm_bg = read.csv(paste(dir,batch,'/bg.csv',sep=''),row.names=1)
+  pwm_left = read.csv(paste(dir,batch,'/',batch,'_leftstd_comb50.csv',sep=''),row.names=1)
+  pwm_mid = read.csv(paste(dir,batch,'/',batch,'_median_comb50.csv',sep=''),row.names=1)
+  pwm_right = read.csv(paste(dir,batch,'/',batch,'_rightstd_comb50.csv',sep=''),row.names=1)
+  
+  createPlot <- function(pwm1,pwm2,compare) {
+    diffLogoObj = createDiffLogoObject(pwm1 = pwm1, pwm2 = pwm2)
+    #diffLogoObj$ylim.negMax=-0.005
+    #diffLogoObj$ylim.posMax=0.005
+    widthToHeightRatio = 16/10
+    size = length(pw1) * 2 / 4
+    resolution = 200
+    width = size * widthToHeightRatio
+    height = size
+    fileName = paste('difflogo/',batch,'/',batch,'_',compare,'.png',sep='')
+    png(filename = fileName, res = resolution,width = width * resolution, height = height * resolution)
+    diffLogoFromPwm(pwm1 = pw1, pwm2 = pw2)
+    dev.off()
+  }
+  
+  createPlot(pwm1 = pwm_en,pwm2 = pwm_de,compare = 'enrich vs deplete')
+  createPlot(pwm1 = pwm_en,pwm2 = pwm_bg,compare = 'enrich vs background')
+  createPlot(pwm1 = pwm_en,pwm2 = pwm_left,compare = 'enrich vs left')
+  createPlot(pwm1 = pwm_en,pwm2 = pwm_mid,compare = 'enrich vs mode')
+  createPlot(pwm1 = pwm_en,pwm2 = pwm_right,compare = 'enrich vs right')
 }
 
 
 
-## plot custom sequence logo
-par(mfrow=c(2,1), pin=c(3, 1), mar = c(2, 4, 1, 1))
-DiffLogo::seqLogo(pwm = pwm1)
-DiffLogo::seqLogo(pwm = pwm2, stackHeight = sumProbabilities)
-par(mfrow=c(1,1), pin=c(1, 1), mar=c(5.1, 4.1, 4.1, 2.1))
 
+diffLogoObj = createDiffLogoObject(pwm1 = pw1, pwm2 = pw2)
+diffLogoObj$ylim.negMax=-0.005
+diffLogoObj$ylim.posMax=0.005
+widthToHeightRatio = 16/10
+size = length(pw1) * 2 / 4
+resolution = 200
+width = size * widthToHeightRatio
+height = size
+fileName = "test.png"
+png(filename = fileName, res = resolution,width = width * resolution, height = height * resolution)
+diffLogoFromPwm(pwm1 = pw1, pwm2 = pw2)
+dev.off()
 
-## plot DiffLogo
-diffLogoFromPwm(pwm1 = pwm1, pwm2 = pwm2)
-
-## diffLogoFromPwm is a convenience function for
-diffLogoObj = createDiffLogoObject(pwm1 = pwm1, pwm2 = pwm2)
-diffLogo(diffLogoObj)
-## mark symbol stacks with significant changes
-diffLogoObj = enrichDiffLogoObjectWithPvalues(diffLogoObj, n1, n2)
-diffLogo(diffLogoObj)
-## plot DiffLogo for PWMs of different length
-diffLogoFromPwm(pwm1 = pwm_long, pwm2 = pwm_short, align_pwms=TRUE)
