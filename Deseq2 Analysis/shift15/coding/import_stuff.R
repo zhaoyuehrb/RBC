@@ -66,4 +66,8 @@ genes_table <- genes_table[1:801,]
 genes_table <- read.table('Gene Groups/custom/top10RPFt2.csv',sep=',',header=T)
 View(genes_table)
 
+genes_table <- read.table('../../../AUG meta analysis/old/t2normed/topGenesAtUTR.csv',sep=',',header=T)
+View(genes_table)
 
+genes_table <- read.table('../../../Database/Gene Groups/genesRegulatingIron_JM.txt',sep=',',header=T)
+View(genes_table)

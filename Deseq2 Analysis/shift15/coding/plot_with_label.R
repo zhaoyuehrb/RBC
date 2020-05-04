@@ -13,13 +13,13 @@ library(AnnotationDbi)
 
 plot_volcano <- function(res_tableDE, type, day,list_of_genes,label,folder_label,xlims,ylims){
   
-  list_of_genes <- genes_table$Gene
+  list_of_genes <- genes_table$Iron.Metabolism.Genes
   #list_of_genes <- mapIds(org.Hs.eg.db,
   #                         keys = as.character(genes_table$X),
   #                         column = 'SYMBOL',
   #                         keytype ='ACCNUM',
   #                         multiVals = 'first')
-  label <- 'tpUTR_with_IREs'
+  label <- 'RegulatingIron_JM'
   
   res_tableDE <- data.frame(res_tableDE)
   res_tableDE$SYMBOL <- mapIds(org.Hs.eg.db,

@@ -80,11 +80,10 @@ def loadAccNumToRawReads(filePath, threshold):
     return accNumToRawReads, totalMappedReads_KO, totalMappedReads_WT
 ################################################################################
 rootdirectory = sys.argv[1]
-lenRange = '30,31'#'18,37'
-transfection = rootdirectory[:-1].split('/')[-1]
-date = rootdirectory[:-1].split('/')[-2]
+lenRange = '18,37'
+barcode = rootdirectory[:-1].split('/')[-1]
 #exptType = transfection.split('_')[-1]
-
+refseqDirectory = rootdirectory + barcode + '_seed29_refseq/'
 ##mir = sys.argv[2]
 ##footprint_threshold = int(sys.argv[2])
 ##rnaseq_threshold = int(sys.argv[4])
@@ -93,16 +92,15 @@ exptType = sys.argv[2]
 ##########################################################################
 refPath = '/home/hguo/Documents/annotations/hg19/refFlat/refFlat_240118.txt'
 splicedGeneORFpath = '/home/hguo/Documents/annotations/hg19/refFlat/splicedGenes_ORF_240118.txt'
-chrList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', 'X', 'Y', 'M']
+chrList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', 'X', 'Y']
 filteredGeneList = lcm.getFilteredGeneList_human(refPath, splicedGeneORFpath, chrList)
 ##############################################################################
 
-genomeDirectoryCore = (rootdirectory[:-1].split('/')[-1])+'_genome/'
 ##refseqDirectoryCore = (rootdirectory[:-1].split('/')[-1])+'_refseq/'
 genomeDirectory = rootdirectory#+genomeDirectoryCore
 ##refseqDirectory = rootdirectory+refseqDirectoryCore
 
-chrList = ['12']#, '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', 'X', 'Y']
+#chrList = ['12']#, '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', 'X', 'Y']
 chrList = map(lambda i: 'chr'+i, chrList)   ## no chrM !! 
 
 chromToGenes = {}
@@ -126,7 +124,7 @@ print 'Number of genes in chromToGenes: ', numGenesInDict
 print 'Number of entries in chromToGenes: ', len(chromToGenes)
 
 ## load the refseqHits (genomic hits will be loaded by chrom)
-##uniqRefseqHits = lcm.getAllUniqRefseqHits(refseqDirectory, lenRange)
+uniqRefseqHits = lcm.getAllUniqRefseqHits(refseqDirectory, lenRange)
 
 #############################################################################
 ################################################################################
@@ -148,42 +146,39 @@ for chrom in chrList:
     ##################################################################
     ##################################################################
     for gene in chromToGenes[chrom]:
+        accNum = gene.accNum()
 
-        if gene.accNum() == 'NM_001256799': #GAPDH
+        ORF_length = spliceCDExons(gene)
+        numGenesContribute += 1
+        if accNum in exonHitsCollection:                    
+            exonHits = exonHitsCollection[accNum]
+            for exonHit in exonHits:
+                shiftedHitStart = getAsitePosition_genomicHit(exonHit, gene, exptType)
+                fraction = shiftedHitStart/float(ORF_length)
+                if 0 <= fraction < 1:
+                    ## this hit is within the coding region
+                    frame = shiftedHitStart%3
+                    if frame == 0:
+                        frameToReads[0] += exonHit.readNum()
+                    elif frame == 1:
+                        frameToReads[1] += exonHit.readNum()
+                    elif frame == 2:
+                        frameToReads[2] += exonHit.readNum()
 
-            accNum = gene.accNum()
-
-            ORF_length = spliceCDExons(gene)
-            numGenesContribute += 1
-            if accNum in exonHitsCollection:                    
-                exonHits = exonHitsCollection[accNum]
-                for exonHit in exonHits:
-                    shiftedHitStart = getAsitePosition_genomicHit(exonHit, gene, exptType)
-                    fraction = shiftedHitStart/float(ORF_length)
-                    if 0 <= fraction < 1:
-                        ## this hit is within the coding region
-                        frame = shiftedHitStart%3
-                        if frame == 0:
-                            frameToReads[0] += exonHit.readNum()
-                        elif frame == 1:
-                            frameToReads[1] += exonHit.readNum()
-                        elif frame == 2:
-                            frameToReads[2] += exonHit.readNum()
-
-##            if accNum in uniqRefseqHits:
-##                refseqHits = uniqRefseqHits[accNum]
-##                for refseqHit in refseqHits:
-##                    shiftedHitStart = getAsitePosition_refseqHit(refseqHit, gene, exptType)
-##                    fraction = shiftedHitStart/float(ORF_length)
-##                    if 0 <= fraction < 1:
-##                        ## this hit is within the coding region
-##                        frame = shiftedHitStart%3
-##                        if frame == 0:
-##                            frameToReads[0] += refseqHit.readNum()
-##                        elif frame == 1:
-##                            frameToReads[1] += refseqHit.readNum()
-##                        elif frame == 2:
-##                            frameToReads[2] += refseqHit.readNum()
+        if accNum in uniqRefseqHits:
+            refseqHits = uniqRefseqHits[accNum]
+            for refseqHit in refseqHits:
+                shiftedHitStart = getAsitePosition_refseqHit(refseqHit, gene, exptType)
+                fraction = shiftedHitStart/float(ORF_length)
+                if 0 <= fraction < 1:
+                ## this hit is within the coding region
+                    frame = shiftedHitStart%3
+                    if frame == 0:
+                        frameToReads[0] += refseqHit.readNum()
+                    elif frame == 1:
+                        frameToReads[1] += refseqHit.readNum()
+                    elif frame == 2:
+                        frameToReads[2] += refseqHit.readNum()
 
 #################################################################################
 print 'Number of genes that contributed: ', numGenesContribute
@@ -197,3 +192,10 @@ print '============================================'
 for i in xrange(3):
     print i, frameToReads[i]
     
+import csv
+key = rootdirectory[:-1].split('/')[-2] + '_' + barcode
+fname = key + '_frame.csv'
+with open(fname,"w") as f:
+    cr = csv.writer(f,delimiter=",",lineterminator="\n")
+    for i in xrange(3):
+        cr.writerow([i,frameToReads[i]])
