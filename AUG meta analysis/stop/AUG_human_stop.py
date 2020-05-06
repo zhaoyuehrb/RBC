@@ -186,7 +186,7 @@ refseqDirectory = rootdirectory+barcode+'_seed29_refseq/'
 
 
 totalMappedReads = 0
-rpkmfile = rootdirectory+'../geneTXCD_RPKMoutput_'+rootdirectory[:-1].split('/')[-1]+'.txt'
+rpkmfile = rootdirectory+'../shift15_geneTXCD_RPKMoutput_'+rootdirectory[:-1].split('/')[-1]+'_shift15.txt'
 with open(rpkmfile) as fin:
     headerline = fin.next()
     for row in csv.reader(fin):
