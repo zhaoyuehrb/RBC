@@ -19,7 +19,7 @@ plot_volcano <- function(res_tableDE, type, day,list_of_genes,label,folder_label
   #                          column = 'SYMBOL',
   #                          keytype ='ACCNUM',
   #                          multiVals = 'first')
-  label <- 'Original'
+  label <- 'Original_fil2'
   
   res_tableDE <- data.frame(res_tableDE)
   res_tableDE$SYMBOL <- mapIds(org.Hs.eg.db,
@@ -39,9 +39,9 @@ plot_volcano <- function(res_tableDE, type, day,list_of_genes,label,folder_label
   
   ### criteria for labelling
   #sub_dat <- subset(res_tableDE, SYMBOL %in% list_of_genes)
-  right <- unname(quantile(res_tableDE$log2FoldChange,0.999))
-  left <- unname(quantile(res_tableDE$log2FoldChange,0.001))
-  up <- unname(quantile(-log10(res_tableDE$padj),0.998))
+  right <- unname(quantile(res_tableDE$log2FoldChange,0.9994))
+  left <- unname(quantile(res_tableDE$log2FoldChange,0.0006))
+  up <- unname(quantile(-log10(res_tableDE$padj),0.9993))
   
   ggplot(res_tableDE,aes(x = log2FoldChange, y = -log10(padj))) +
     
@@ -49,8 +49,8 @@ plot_volcano <- function(res_tableDE, type, day,list_of_genes,label,folder_label
     xlim(xlims[[1]], xlims[[2]]) +
     
     #threshold lines
-    geom_vline(xintercept = -1, linetype = 'dashed', color = 'brown',size = 0.7) +
-    geom_vline(xintercept = 1, linetype = 'dashed', color = 'brown', size = 0.7) +
+    geom_vline(xintercept = -0.75, linetype = 'dashed', color = 'brown',size = 0.7) +
+    geom_vline(xintercept = 0.75, linetype = 'dashed', color = 'brown', size = 0.7) +
     geom_hline(yintercept = -log10(0.05), linetype = 'dashed', color = 'brown', size = 0.7) +
     
     #points
@@ -106,35 +106,35 @@ plot_volcano <- function(res_tableDE, type, day,list_of_genes,label,folder_label
 }
 
 
-plot_volcano(res_0_L24,'ER L24 T0',1,c(),'','',xlims=c(-5,5), ylims=c(0,10))
+plot_volcano(res_0_L24,'ER L24 T0',1,c(),'','',xlims=c(-8,8), ylims=c(0,10))
 
 #plot_volcano(res_0_L24,'L24_0_label',1,c(subset(res_0_L24,log2FoldChange>1)),'','',xlims=c(-5,5), ylims=c(0,10))
 
-plot_volcano(res_1_L24,'ER L24 T1',1,c(),'','',xlims=c(-5,5), ylims=c(0,10))
-plot_volcano(res_2_L24,'ER L24 T2',1,c(),'','',xlims=c(-5,5), ylims=c(0,10))
+plot_volcano(res_1_L24,'ER L24 T1',1,c(),'','',xlims=c(-8,8), ylims=c(0,20))
+plot_volcano(res_2_L24,'ER L24 T2',1,c(),'','',xlims=c(-8,8), ylims=c(0,20))
 
-plot_volcano(res_0_S15,'ER S15 T0',1,c(),'','',xlims=c(-5,5), ylims=c(0,26))
-plot_volcano(res_1_S15,'ER S15 T1',1,c(),'','',xlims=c(-5,5), ylims=c(0,40))
-plot_volcano(res_2_S15,'ER S15 T2',1,c(),'','',xlims=c(-5,5), ylims=c(0,20))
+plot_volcano(res_0_S15,'ER S15 T0',1,c(),'','',xlims=c(-10,10), ylims=c(0,20))
+plot_volcano(res_1_S15,'ER S15 T1',1,c(),'','',xlims=c(-7,7), ylims=c(0,30))
+plot_volcano(res_2_S15,'ER S15 T2',1,c(),'','',xlims=c(-4,4), ylims=c(0,7))
 
-plot_volcano(res_0_S24,'ER S24 T0',1,c(),'','',xlims=c(-5,5), ylims=c(0,10))
-plot_volcano(res_1_S24,'ER S24 T1',1,c(),'','',xlims=c(-5,5), ylims=c(0,10))
+plot_volcano(res_0_S24,'ER S24 T0',1,c(),'','',xlims=c(-11,11), ylims=c(0,10))
+plot_volcano(res_1_S24,'ER S24 T1',1,c(),'','',xlims=c(-15,15), ylims=c(0,100))
 plot_volcano(res_2_S24,'ER S24 T2',1,c(),'','',xlims=c(-5,5), ylims=c(0,10))
 
 
-plot_volcano(L24_0_S15,'L24 against S15 T0',1,c(),'','',xlims=c(-5,5),ylims=c(0,35))
-plot_volcano(L24_1_S15,'L24 against S15 T1',1,c(),'','',xlims=c(-5,5),ylims=c(0,35))
-plot_volcano(L24_2_S15,'L24 against S15 T2',1,c(),'','',xlims=c(-5,5),ylims=c(0,35))
+plot_volcano(L24_0_S15,'L24 against S15 T0',1,c(),'','',xlims=c(-5,5),ylims=c(0,15))
+plot_volcano(L24_1_S15,'L24 against S15 T1',1,c(),'','',xlims=c(-3,3),ylims=c(0,10))
+plot_volcano(L24_2_S15,'L24 against S15 T2',1,c(),'','',xlims=c(-5,5),ylims=c(0,15))
 
 
-plot_volcano(res_1_against_0_RNA,'RNA T1 against T0',1,c(),'','',xlims=c(-6,6), ylims=c(0,120))
-plot_volcano(res_2_against_0_RNA,'RNA T2 against T0',1,c(),'','',xlims=c(-11,11), ylims=c(0,350))
+plot_volcano(res_1_against_0_RNA,'RNA T1 against T0',1,c(),'','',xlims=c(-10,10), ylims=c(0,80))
+plot_volcano(res_2_against_0_RNA,'RNA T2 against T0',1,c(),'','',xlims=c(-11,11), ylims=c(0,40))
 
 
-plot_volcano(res_1_against_0_RPF,'RPF T1 against T0',1,c(),'','',xlims=c(-7,7), ylims=c(0,150))
-plot_volcano(res_2_against_0_RPF,'RPF T2 against T0',1,c(),'','',xlims=c(-11,11), ylims=c(0,300))
+plot_volcano(res_1_against_0_RPF,'RPF T1 against T0',1,c(),'','',xlims=c(-10,10), ylims=c(0,50))
+plot_volcano(res_2_against_0_RPF,'RPF T2 against T0',1,c(),'','',xlims=c(-11,11), ylims=c(0,10))
 
 
-plot_volcano(res_1_te_0,'TE T1 against T0',1,c(),'','',xlims=c(-5,5), ylims=c(0,12))
-plot_volcano(res_2_te_0,'TE T2 against T0',1,c(),'','',xlims=c(-5,5), ylims=c(0,15))
+plot_volcano(res_1_te_0,'TE T1 against T0',1,c(),'','',xlims=c(-10,10), ylims=c(0,12))
+plot_volcano(res_2_te_0,'TE T2 against T0',1,c(),'','',xlims=c(-10,10), ylims=c(0,15))
 

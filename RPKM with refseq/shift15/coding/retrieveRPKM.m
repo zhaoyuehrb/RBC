@@ -28,8 +28,9 @@ end
 
 %% cdReads filter
 
-idxs = sum((cdReadsTable{:,2:end}>=10)') == 30;
+idxs = sum((cdReadsTable{:,2:end}>=2)') == 30;
 disp(['num of genes pass filter: ' num2str(sum(idxs))])
 
 cdReadsTableFiltered = cdReadsTable(idxs,:);
-writetable(cdReadsTableFiltered,'cdReadsFiltered.csv');
+writetable(cdReadsTableFiltered,'cdReadsFiltered2.csv')
+%writetable(cdReadsTableFiltered,'cdReadsNotFiltered.csv');
