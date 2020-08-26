@@ -3,7 +3,7 @@ library(IHW)
 
 #load read count table
 #df_te <- read.table('/dir', sep = '\t',header = T) # dir = path where df_te is stored
-df_te <- read.table('cdReadsFiltered2.csv', sep = ',',header = T) 
+df_te <- read.table('cdReadsFiltered8.csv', sep = ',',header = T) 
 
 rownames(df_te) <- df_te[,1]
 df_te[,1]<-NULL
@@ -109,29 +109,29 @@ res_2_TE <- filter_sig_res(dds,c("combined","RPF2","RNA2"))
 
 
 
-write.csv(res_1_against_0_RNA,"csv_raw/fil2/RNA_T1_against_T0.csv")
-write.csv(res_2_against_0_RNA,"csv_raw/fil2/RNA_T2_against_T0.csv")
-write.csv(res_2_against_1_RNA,"csv_raw/fil2/RNA_T2_against_T1.csv")
-write.csv(res_0_L24,"csv_raw/fil2/ER_L24_t0.csv")
-write.csv(res_1_L24,"csv_raw/fil2/ER_L24_t1.csv")
-write.csv(res_2_L24,"csv_raw/fil2/ER_L24_t2.csv")
+write.csv(res_1_against_0_RNA,"csv_raw/fil8/RNA_T1_against_T0.csv")
+write.csv(res_2_against_0_RNA,"csv_raw/fil8/RNA_T2_against_T0.csv")
+write.csv(res_2_against_1_RNA,"csv_raw/fil8/RNA_T2_against_T1.csv")
+write.csv(res_0_L24,"csv_raw/fil8/ER_L24_t0.csv")
+write.csv(res_1_L24,"csv_raw/fil8/ER_L24_t1.csv")
+write.csv(res_2_L24,"csv_raw/fil8/ER_L24_t2.csv")
 
-write.csv(res_0_S15,"csv_raw/fil2/ER_S15_t0.csv")
-write.csv(res_1_S15,"csv_raw/fil2/ER_S15_t1.csv")
-write.csv(res_2_S15,"csv_raw/fil2/ER_S15_t2.csv")
+write.csv(res_0_S15,"csv_raw/fil8/ER_S15_t0.csv")
+write.csv(res_1_S15,"csv_raw/fil8/ER_S15_t1.csv")
+write.csv(res_2_S15,"csv_raw/fil8/ER_S15_t2.csv")
 
-write.csv(res_0_S24,"csv_raw/fil2/ER_S24_t0.csv")
-write.csv(res_1_S24,"csv_raw/fil2/ER_S24_t1.csv")
-write.csv(res_2_S24,"csv_raw/fil2/ER_S24_t2.csv")
+write.csv(res_0_S24,"csv_raw/fil8/ER_S24_t0.csv")
+write.csv(res_1_S24,"csv_raw/fil8/ER_S24_t1.csv")
+write.csv(res_2_S24,"csv_raw/fil8/ER_S24_t2.csv")
 
-write.csv(L24_0_S15,"csv_raw/fil2/L24_against_S15_t0.csv")
-write.csv(L24_1_S15,"csv_raw/fil2/L24_against_S15_t1.csv")
-write.csv(L24_2_S15,"csv_raw/fil2/L24_against_S15_t2.csv")
-write.csv(res_1_against_0_RPF,"csv_raw/fil2/RPF_T1_against_T0.csv")
-write.csv(res_2_against_0_RPF,"csv_raw/fil2/RPF_T2_against_T0.csv")
-write.csv(res_0_TE,"csv_raw/fil2/TE_t0.csv")
-write.csv(res_1_TE,"csv_raw/fil2/TE_t1.csv")
-write.csv(res_2_TE,"csv_raw/fil2/TE_t2.csv")
+write.csv(L24_0_S15,"csv_raw/fil8/L24_against_S15_t0.csv")
+write.csv(L24_1_S15,"csv_raw/fil8/L24_against_S15_t1.csv")
+write.csv(L24_2_S15,"csv_raw/fil8/L24_against_S15_t2.csv")
+write.csv(res_1_against_0_RPF,"csv_raw/fil8/RPF_T1_against_T0.csv")
+write.csv(res_2_against_0_RPF,"csv_raw/fil8/RPF_T2_against_T0.csv")
+write.csv(res_0_TE,"csv_raw/fil8/TE_t0.csv")
+write.csv(res_1_TE,"csv_raw/fil8/TE_t1.csv")
+write.csv(res_2_TE,"csv_raw/fil8/TE_t2.csv")
 
 
 ### count stuff
@@ -170,8 +170,8 @@ filter_sig_res <- function(dds, factors) {
 res_1_te_0 <- filter_sig_res(dds, c("assayRPF.timet1"))
 res_2_te_0 <- filter_sig_res(dds, c("assayRPF.timet2"))
 
-write.csv(res_1_te_0,"csv_raw/fil2/TE_t1_t0.csv")
-write.csv(res_2_te_0,"csv_raw/fil2/TE_t2_t0.csv")
+write.csv(res_1_te_0,"csv_raw/fil8/TE_t1_t0.csv")
+write.csv(res_2_te_0,"csv_raw/fil8/TE_t2_t0.csv")
 
 
 
@@ -207,4 +207,4 @@ filter_sig_res <- function(dds, factors) {
 ###deseq at individual time points for TE, controlling for the baseline
 res_2_te_1 <- filter_sig_res(dds, c("assayRPF.timet2"))
 
-write.csv(res_2_te_1,"csv_raw/fil2/TE_t2_t1.csv")
+write.csv(res_2_te_1,"csv_raw/fil8/TE_t2_t1.csv")
