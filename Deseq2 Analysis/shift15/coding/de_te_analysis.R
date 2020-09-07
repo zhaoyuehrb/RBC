@@ -3,7 +3,7 @@ library(IHW)
 
 #load read count table
 #df_te <- read.table('/dir', sep = '\t',header = T) # dir = path where df_te is stored
-df_te <- read.table('cdReadsFiltered8.csv', sep = ',',header = T) 
+df_te <- read.table('cdReadsFiltered5.csv', sep = ',',header = T) 
 
 rownames(df_te) <- df_te[,1]
 df_te[,1]<-NULL
@@ -25,11 +25,18 @@ dds <- DESeqDataSetFromMatrix(countData = df_te, colData = colData,design = desi
 #run DESeq
 dds <- DESeq(dds)
 
+normalized_counts <- counts(dds, normalized=TRUE)
+write.table(normalized_counts, file="normalized_counts_fil5.txt", 
+            sep="\t", quote=F, col.names=NA)
+
+
 alpha <- 0.05
 res <- results(dds,alpha = alpha)
 #res <- results(dds,alpha = alpha, filterFun = IHW)
 resultsNames(dds)
 test_design <- model.matrix(design, colData)
+
+
 
 ###function to compare different combinations of factors
 filter_sig_res <- function(dds, factors) {
